@@ -1,5 +1,7 @@
 let {log, dir} = console;
 
+//Делаем точки с разным набором координат
+
 class Point {
 	constructor (x) {
 		this.x = x;
