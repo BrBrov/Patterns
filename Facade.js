@@ -1,44 +1,36 @@
 let {log, dir} = console;
 
-//Класс с методом создания точки из кучи классов
+// Класс с методом создания точек из кучи классов
+// Условно представим, что классы точек по логике очень сложные)))
 
-class Point {
-	setX(x) {
+class PointX {
+	constructor(x) {
 		this.x = x;
 	}
+}
 
-	setY(y) {
+class PointXY {
+	constructor(x, y) {
+		this.x = x;
 		this.y = y;
 	}
 }
 
 class Facade {
-	constructor() {
-		this.point = new Point();
+	getPointX(x) {
+		return new PointX(x);
 	}
 
-	addX(x) {
-		this.point.setX(x);
-	}
-
-	addY(y) {
-		this.point.setY(y);
-	}
-
-	createPoint(obj) {
-		this.addX(obj.x);
-		this.addY(obj.y);
-		return this.point;
+	getPointXY(x, y) {
+		return new PointXY(x, y);
 	}
 }
 
 const facade = new Facade();
 
-const coords = {
-	x: 10,
-	y: 20
-};
+const pointX = facade.getPointX(1);
 
-const point = facade.createPoint(coords);
+const pointXY = facade.getPointXY(1, 2);
 
-dir(point);
+dir(pointX);
+dir(pointXY);
