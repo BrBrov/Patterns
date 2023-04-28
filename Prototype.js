@@ -2,27 +2,30 @@ let {log, dir} = console;
 
 //Создаём копируем точки, что бы объекты были разнные по ссылке
 
-class Point {
-	constructor(x, y) {
-		return {
-			x: x,
-			y: y
-		};
+class PointX {
+	constructor(x) {
+		this.x = x;
 	}
 }
 
-class CreatePrototype {
-	constructor(obj) {
-		return Object.assign({}, obj);
+class PointXY extends PointX{
+	constructor(x,y) {
+		super(x);
+		this.y = y;
 	}
 }
 
-const point = new Point(1, 2);
-let newPoint = point;
-dir(point);
-log(Object.is(point, newPoint));
+class PointXYZ extends PointXY {
+	constructor(x, y, z) {
+		super(x, y);
+		this.z = z;
+	}
+}
 
-newPoint = new CreatePrototype(point);
 
-dir(newPoint);
-log(Object.is(point, newPoint));
+const pointXY = new PointXY(1, 2);
+dir(pointXY);
+
+const pointXYZ = new PointXYZ(1, 2, 3);
+
+dir(pointXYZ);
