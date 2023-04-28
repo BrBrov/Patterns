@@ -2,34 +2,37 @@ let {log, dir} = console;
 
 //Разделяем цвет и координаты точек
 
-class Red {
-	color = 'Red';
-}
-
-class Green {
-	color = 'Green';
-}
-
-class PointXY {
-	constructor(x, y, color) {
+class Point {
+	constructor( x, y, color) {
 		this.x = x;
 		this.y = y;
-		this.color = color.color;
+		this.color = color.getColor();
 	}
 }
 
-class PointX {
-	constructor(x, color) {
-		this.x = x;
-		this.color = color.color;
+class Color {
+	getColor() {
+		return 'No color';
+	}
+}
+
+class Red extends Color {
+	constructor() {
+		super();
+		this.color = 'red';
+	}
+
+	getColor() {
+		return this.color;
 	}
 }
 
 const red = new Red();
-const green = new Green();
+const point = new Point(1, 2, red);
 
-const pointX = new PointX(1, red);
-const pointXY = new PointXY(1, 2, green);
+dir(point);
 
-log(pointX);
-log(pointXY);
+const color = new Color();
+const nextPoint = new Point(1, 2, color);
+
+dir(nextPoint);

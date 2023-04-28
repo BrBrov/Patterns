@@ -3,7 +3,7 @@ let {log, dir} = console;
 //Добавляем к точк свойства
 
 class Point {
-	constructor(x) {
+	setX(x) {
 		this.x = x;
 	}
 }
@@ -11,11 +11,7 @@ class Point {
 class PointExtendes {
 	constructor(point) {
 		this.point = point;
-	}
-
-	setX(x) {
-		this.point.x = x;
-	}
+	}	
 
 	setY(y) {
 		this.point.y = y;
@@ -35,12 +31,18 @@ class PointExtendes {
 	}
 }
 
-const point = new Point(1);
+const point = new Point();
+
+point.setX(4);
 
 const pointEx = new PointExtendes(point);
 
-pointEx.setX(4);
+
 pointEx.setY(2);
 pointEx.setZ(3);
+
+log(pointEx.getCoordinates());
+
+pointEx.point.setX(1);
 
 log(pointEx.getCoordinates());
