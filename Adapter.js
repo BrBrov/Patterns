@@ -9,16 +9,19 @@ class PointX {
 }
 
 class PointXY {
-	constructor(point, y) {
-		this.x = point.x;
+	constructor(x, y) {
+		this.x = x;
 		this.y = y;
 	}
 }
 
-const pointX = new PointX(1);
+class AdapterPoint extends PointX {
+	constructor(x, y) {
+		super(x);
+		return new PointXY(this.x, y);
+	}
+}
 
-log(pointX);
+const pointXY = new AdapterPoint(1, 2);
 
-const pointXY = new PointXY(pointX, 2);
-
-log(pointXY);
+dir(pointXY);
