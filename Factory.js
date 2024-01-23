@@ -23,22 +23,35 @@ class PointXYZ {
 	}
 }
 
-class PointBuilder {
-	constructor (x, y, z) {
-		if (z) {
-			return new PointXYZ(x, y, z);
-		}
+class FactoryDefault {
+	constructor(Point, arg) {
+		this.point = new Point(...arg);
+	}
 
-		if (y) {
-			return new PointXY(x, y);
-		}
-
-		if (x) {
-			return new PointX(x);
-		}
+	getPoint() {
+		return this.point;
 	}
 }
 
-dir(new PointBuilder(1));
-dir(new PointBuilder(1, 2));
-dir(new PointBuilder(1, 2, 3));
+class FactoryPointX extends FactoryDefault{
+	constructor(x) {
+		super(PointX, [x]);
+	}
+}
+
+class FactoryPointXY extends FactoryDefault {
+	constructor(x, y){
+		super(PointXY, [x, y]);
+	}
+}
+
+class FactoryPointXYZ extends FactoryDefault {
+	constructor(x, y, z) {
+		super(PointXYZ, [x, y, z]);
+	}
+}
+
+dir(new FactoryPointX(1).getPoint());
+dir(new FactoryPointXY(1, 2).getPoint());
+dir(new FactoryPointXYZ(1, 2, 3).getPoint());
+
