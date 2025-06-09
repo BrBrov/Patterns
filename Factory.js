@@ -1,57 +1,36 @@
 let {log, dir} = console;
 
 //Делаем точки с разным набором координат
-
-class PointX {
-	constructor(x) {
-		this.x = x;
-	}
+class Point2D {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
 }
 
-class PointXY {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-	}
+class Point3D {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 }
 
-class PointXYZ {
-	constructor(x, y, z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+// Фабрика
+class PointFactory {
+    createPoint(type, ...args) {
+        switch(type) {
+            case '2D':
+                return new Point2D(...args);
+            case '3D':
+                return new Point3D(...args);
+            default:
+                throw new Error('Unknown point type');
+        }
+    }
 }
 
-class FactoryDefault {
-	constructor(Point, arg) {
-		this.point = new Point(...arg);
-	}
-
-	getPoint() {
-		return this.point;
-	}
-}
-
-class FactoryPointX extends FactoryDefault{
-	constructor(x) {
-		super(PointX, [x]);
-	}
-}
-
-class FactoryPointXY extends FactoryDefault {
-	constructor(x, y){
-		super(PointXY, [x, y]);
-	}
-}
-
-class FactoryPointXYZ extends FactoryDefault {
-	constructor(x, y, z) {
-		super(PointXYZ, [x, y, z]);
-	}
-}
-
-dir(new FactoryPointX(1).getPoint());
-dir(new FactoryPointXY(1, 2).getPoint());
-dir(new FactoryPointXYZ(1, 2, 3).getPoint());
-
+// Использование фабрики
+let factory = new PointFactory();
+let point2D = factory.createPoint('2D', 1, 2);
+let point3D = factory.createPoint('3D', 1, 2, 3);
