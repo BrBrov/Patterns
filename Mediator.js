@@ -3,48 +3,43 @@ const { log } = console;
 // Создаём точки со своими цветами
 
 class Point {
-  constructor(x, y, z = 0, color = "black", label = "") {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.z = z;
-    this.color = color;
-    this.label = label;
   }
 
-  toString() {
-    return `Point(${this.x}, ${this.y}, ${this.z}) [color=${this.color}, label='${this.label}']`;
+  getCoordinates() {
+    return `Point(${this.x}, ${this.y})`;
   }
 }
 
 // Абстрактный медиатор
-class Mediator {
+class AbstractMediator {
   notify(sender, event, data) {
     throw new Error("Method 'notify()' must be implemented.");
   }
 }
 
-// Коллега (точка), которая взаимодействует через медиатор
-class PointMediatorExecutor {
+// Класс, который взаимодействует через медиатор с точками
+class Executor {
   constructor(mediator, point) {
     this.mediator = mediator;
     this.point = point;
   }
 
-  updateCoordinates(x, y, z = 0) {
+  updateX(x) {
     this.point.x = x;
-    this.point.y = y;
-    this.point.z = z;
-    this.mediator.notify(this, "coordinates_updated", { x, y, z });
+    this.mediator.notify(this, "update X", { x });
   }
 
-  changeColor(color) {
-    this.point.color = color;
-    this.mediator.notify(this, "color_changed", { color });
+  updateY(y) {
+    this.point.y = y;
+    this.mediator.notify(this, "update Y", { y });
   }
 }
 
 // Конкретный медиатор для управления точками
-class PointMediator extends Mediator {
+class Mediator extends AbstractMediator {
   constructor() {
     super();
     this.executors = [];
@@ -55,41 +50,55 @@ class PointMediator extends Mediator {
   }
 
   notify(sender, event, data) {
-
-    if (event === "coordinates_updated") {
+    if (event === "update X") {
       this.executors.forEach(executor => {
-        if (executor !== sender) {
-          log(`Mediator: Notifying ${executor.point.toString()} about coordinate change`);
+        if (sender == executor) {
+          if (data.x <= 0) {            
+            log(`Mediator: Notifying that X must be more then 0`);
+            executor.updateX(1);
+          } else {
+            log(`Mediator: Notifying ${executor.point.getCoordinates()} about coordinate X change`);
+          }
         }
       });
-    } else if (event === "color_changed") {
-      // Например, запрещаем красный цвет
-      if (data.color === "red") {
-        log("Mediator: Red color is not allowed! Changing to blue.");
-        sender.changeColor("blue");
-      }
+    } else if (event === "update Y") {
+      this.executors.forEach(executor => {
+        if (sender == executor) {
+          if (data.y <= 0) {
+            log(`Mediator: Notifying that Y must be more then 0`);
+            executor.updateY(1);            
+          } else {
+            log(`Mediator: Notifying ${executor.point.getCoordinates()} about coordinate Y change`);
+          }
+        }
+      });
     }
   }
 }
 
 // Пример использования
-const mediator = new PointMediator();
+const mediator = new Mediator();
 
-const point1 = new Point(1, 2, 0, "green", "A");
-const point2 = new Point(3, 4, 0, "yellow", "B");
+const point1 = new Point(1, 2);
+const point2 = new Point(3, 4);
 
-const pointExecutor1 = new PointMediatorExecutor(mediator, point1);
-const pointExecutor2 = new PointMediatorExecutor(mediator, point2);
+const pointExecutor1 = new Executor(mediator, point1);
+const pointExecutor2 = new Executor(mediator, point2);
 
 mediator.addExecutor(pointExecutor1);
 mediator.addExecutor(pointExecutor2);
 
 // Изменяем координаты первой точки
-pointExecutor1.updateCoordinates(5, 6);
+pointExecutor1.updateX(5);
 
-// Меняем цвет второй точки на красный (медиатор исправит на синий)
-pointExecutor2.changeColor("red");
+// Изменяем координаты второй точки
+pointExecutor2.updateY(1);
 
-log("\nFinal state:");
-log(pointExecutor1.point.toString());
-log(pointExecutor2.point.toString());
+log(pointExecutor1.point.getCoordinates());
+log(pointExecutor2.point.getCoordinates());
+
+pointExecutor1.updateX(-2);
+pointExecutor2.updateY(0);
+
+log(pointExecutor1.point.getCoordinates());
+log(pointExecutor2.point.getCoordinates());
